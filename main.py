@@ -105,26 +105,28 @@ def simplePredict():
     def prediction_simple_modal():
         simple_model = pickle.load(open('disorder_subclass_simple.sav', 'rb'))
         simple_prediction = simple_model.predict([[genesMom, inheritDad, maternalGen, paternalGen, autopsyBirthDefect, hOsubstanceAbuse, symptom1, symptom2, symptom3, symptom4, symptom5]])
-        
-        # st.write(name, "dengan usia", age, "mengidap penyakit turunan ")
+        simple_diagnosis = ""
+
         if simple_prediction[0] == 0:
-            st.write(name, "dengan usia", age, "mengidap penyakit turunan Alzheimer's")
+            simple_diagnosis = "Alzheimer's"
         elif simple_prediction[0] == 1:
-            st.write(name, "dengan usia", age, "mengidap penyakit turunan Cancer")
+            simple_diagnosis = "Cancer"
         elif simple_prediction[0] == 2:
-            st.write(name, "dengan usia", age, "mengidap penyakit turunan Cystic fibrosis")
+            simple_diagnosis = "Cystic fibrosis"
         elif simple_prediction[0] == 3:
-            st.write(name, "dengan usia", age, "mengidap penyakit turunan Diabetes")
+            simple_diagnosis = "Diabetes"
         elif simple_prediction[0] == 4:
-            st.write(name, "dengan usia", age, "mengidap penyakit turunan Hemochromatosis")
+            simple_diagnosis = "Hemochromatosis"
         elif simple_prediction[0] == 5:
-            st.write(name, "dengan usia", age, "mengidap penyakit turunan Leber's hereditary optic neuropathy")
+            simple_diagnosis = "Leber's hereditary optic neuropathy"
         elif simple_prediction[0] == 6:
-            st.write(name, "dengan usia", age, "mengidap penyakit turunan Leigh syndrome")
+            simple_diagnosis = "Leigh syndrome"
         elif simple_prediction[0] == 7:
-            st.write(name, "dengan usia", age, "mengidap penyakit turunan Mitochondrial myopathy")
+            simple_diagnosis = "Mitochondrial myopathy"
         else:
-            st.write("Tay-Sachs")
+            simple_diagnosis = "Tay-Sachs"
+
+        st.write(name, "dengan usia", age, "mengidap penyakit turunan ", simple_diagnosis)
 
     if "simple_predict" not in st.session_state:
         if st.button("Submit", key="simplePredict"):
@@ -245,25 +247,28 @@ def advancedPredict():
     def prediction_full_modal():
         full_model = pickle.load(open('disorder_subclass_full.sav', 'rb'))
         full_prediction = full_model.predict([[genesMom, inheritDad, maternalGen, momAge, DadAge, status, followUp, birthAsphyxia, birthDefect, hOradiationExposure, hOsubstanceAbuse, whiteBloodCellCount, bloodTestResult, symptom1, symptom2, symptom3, symptom4, symptom5, bloodCellCount]])
+        full_diagnosis = ""
 
         if full_prediction[0] == 0:
-            st.write(name, "dengan usia", age, "mengidap penyakit turunan Alzheimer's")
+            full_diagnosis = "Alzheimer's"
         elif full_prediction[0] == 1:
-            st.write(name, "dengan usia", age, "mengidap penyakit turunan Cancer")
+            full_diagnosis = "Cancer"
         elif full_prediction[0] == 2:
-            st.write(name, "dengan usia", age, "mengidap penyakit turunan Cystic fibrosis")
+            full_diagnosis = "Cystic fibrosis"
         elif full_prediction[0] == 3:
-            st.write(name, "dengan usia", age, "mengidap penyakit turunan Diabetes")
+            full_diagnosis = "Diabetes"
         elif full_prediction[0] == 4:
-            st.write(name, "dengan usia", age, "mengidap penyakit turunan Hemochromatosis")
+            full_diagnosis = "Hemochromatosis"
         elif full_prediction[0] == 5:
-            st.write(name, "dengan usia", age, "mengidap penyakit turunan Leber's hereditary optic neuropathy")
+            full_diagnosis = "Leber's hereditary optic neuropathy"
         elif full_prediction[0] == 6:
-            st.write(name, "dengan usia", age, "mengidap penyakit turunan Leigh syndrome")
+            full_diagnosis = "Leigh syndrome"
         elif full_prediction[0] == 7:
-            st.write(name, "dengan usia", age, "mengidap penyakit turunan Mitochondrial myopathy")
+            full_diagnosis = "Mitochondrial myopathy"
         else:
-            st.write(name, "dengan usia", age, "mengidap penyakit turunan Tay-Sachs")
+            full_diagnosis = "Tay-Sachs"
+
+        st.write(name, "dengan usia", age, "mengidap penyakit turunan", full_diagnosis)
 
     if "full_predict" not in st.session_state:
         if st.button("Submit", key="fullPredict"):
