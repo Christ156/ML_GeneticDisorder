@@ -38,8 +38,10 @@ def advancedPredict():
         gender = 2
     elif gender == "Women":
         gender = 1
-    else:
+    elif gender == "Ambiguous":
         gender = 0
+    else:
+        gender = -1
 
     age = st.slider("Usia anda", 0, 120, 20)
 
@@ -186,8 +188,9 @@ def advancedPredict():
             i+=1
 
     if "full_predict" not in st.session_state:
-        if st.button("Submit", key="fullPredict"):
-            prediction_full_modal()
+        if name != "" and gender != -1:
+            if st.button("Submit", key="fullPredict"):
+                prediction_full_modal()
 
 pg = st.navigation([st.Page(homePage, title="Home"), st.Page(advancedPredict, title="Prediction")])
 pg.run()
