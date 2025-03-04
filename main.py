@@ -123,6 +123,7 @@ def advancedPredict():
     @st.dialog("Full Diagnosis Result")
     def prediction_full_modal():
         full_model = pickle.load(open('disorder_subclass_final.sav', 'rb'))
+        full_proba = full_model.predict_proba([[genesMom, inheritDad, maternalGen, paternalGen, folicAcid, whiteBloodCellCount, symptom1, symptom2, symptom3, symptom4, symptom5, totalBloodCell, totalSymtomps, gender]])
         full_prediction = full_model.predict([[genesMom, inheritDad, maternalGen, paternalGen, folicAcid, whiteBloodCellCount, symptom1, symptom2, symptom3, symptom4, symptom5, totalBloodCell, totalSymtomps, gender]])
         full_diagnosis = ""
 
@@ -145,7 +146,42 @@ def advancedPredict():
         else:
             full_diagnosis = "Tay-Sachs"
 
-        st.write(name, "dengan usia", age, "mengidap penyakit turunan", full_diagnosis)
+        percentDiag = "{:.2f}".format(full_proba[0][full_prediction[0]]*100)
+        st.write(name, "dengan usia", age, "mengidap penyakit turunan", full_diagnosis, " dengan prosentase sebesar ", float(percentDiag), "%")
+
+        st.title("Probabilitas terkena genetic disorder lain:")
+
+        i = 0
+        for x in full_proba[0]:
+            if i != full_prediction[0]:
+                if i == 0:
+                    x = "{:.2f}".format(x*100)
+                    st.write("Alzheimer's : ", float(x), "%")
+                elif i == 1:
+                    x = "{:.2f}".format(x*100)
+                    st.write("Cancer : ", float(x), "%")
+                elif i == 2:
+                    x = "{:.2f}".format(x*100)
+                    st.write("Cystic fibrosis : ", float(x), "%")
+                elif i == 3:
+                    x = "{:.2f}".format(x*100)
+                    st.write("Diabetes : ", float(x), "%")
+                elif i == 4:
+                    x = "{:.2f}".format(x*100)
+                    st.write("Hemochromatosis : ", float(x), "%")
+                elif i == 5:
+                    x = "{:.2f}".format(x*100)
+                    st.write("Leber's hereditary optic neuropathy : ", float(x), "%")
+                elif i == 6:
+                    x = "{:.2f}".format(x*100)
+                    st.write("Leigh syndrome : ", float(x), "%")
+                elif i == 7:
+                    x = "{:.2f}".format(x*100)
+                    st.write("Mitochondrial myopathy : ", float(x), "%")
+                else:
+                    x = "{:.2f}".format(x*100)
+                    st.write("Tay-Sachs : ", float(x), "%")
+            i+=1
 
     if "full_predict" not in st.session_state:
         if st.button("Submit", key="fullPredict"):
