@@ -151,5 +151,5 @@ def advancedPredict():
         if st.button("Submit", key="fullPredict"):
             prediction_full_modal()
 
-pg = st.navigation([st.Page(homePage, title="Home"), st.Page(advancedPredict, title="Advanced prediction")])
+pg = st.navigation([st.Page(homePage, title="Home"), st.Page(advancedPredict, title="Prediction")])
 pg.run()
