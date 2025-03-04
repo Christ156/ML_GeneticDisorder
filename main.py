@@ -37,7 +37,7 @@ def advancedPredict():
         gender = 2
     elif gender == "Women":
         gender = 1
-    elif gender == "Ambiguous":
+    else:
         gender = 0
 
     age = st.slider("Usia anda", 0, 120, 20)
