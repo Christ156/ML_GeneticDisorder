@@ -1,5 +1,6 @@
 import streamlit as st
 import pickle
+import pandas as pd
 
 st.logo("logoLabrakadabra.png", size="large", icon_image="logoLabrakadabra.png")
 
@@ -120,7 +121,7 @@ def advancedPredict():
 
     st.divider()
 
-    @st.dialog("Full Diagnosis Result")
+    @st.dialog("Hasil Diagnosis")
     def prediction_full_modal():
         full_model = pickle.load(open('disorder_subclass_final.sav', 'rb'))
         full_proba = full_model.predict_proba([[genesMom, inheritDad, maternalGen, paternalGen, folicAcid, whiteBloodCellCount, symptom1, symptom2, symptom3, symptom4, symptom5, totalBloodCell, totalSymtomps, gender]])
@@ -150,37 +151,38 @@ def advancedPredict():
         st.write(name, "dengan usia", age, "mengidap penyakit turunan", full_diagnosis, " dengan prosentase sebesar ", float(percentDiag), "%")
 
         st.title("Probabilitas terkena genetic disorder lain:")
+        st.bar_chart(full_proba[0]*100, x_label="Disorder Class", y_label="Percentage")
 
         i = 0
         for x in full_proba[0]:
             if i != full_prediction[0]:
                 if i == 0:
                     x = "{:.2f}".format(x*100)
-                    st.write("Alzheimer's : ", float(x), "%")
+                    st.write("0. Alzheimer's : ", float(x), "%")
                 elif i == 1:
                     x = "{:.2f}".format(x*100)
-                    st.write("Cancer : ", float(x), "%")
+                    st.write("1. Cancer : ", float(x), "%")
                 elif i == 2:
                     x = "{:.2f}".format(x*100)
-                    st.write("Cystic fibrosis : ", float(x), "%")
+                    st.write("2. Cystic fibrosis : ", float(x), "%")
                 elif i == 3:
                     x = "{:.2f}".format(x*100)
-                    st.write("Diabetes : ", float(x), "%")
+                    st.write("3. Diabetes : ", float(x), "%")
                 elif i == 4:
                     x = "{:.2f}".format(x*100)
-                    st.write("Hemochromatosis : ", float(x), "%")
+                    st.write("4. Hemochromatosis : ", float(x), "%")
                 elif i == 5:
                     x = "{:.2f}".format(x*100)
-                    st.write("Leber's hereditary optic neuropathy : ", float(x), "%")
+                    st.write("5. Leber's hereditary optic neuropathy : ", float(x), "%")
                 elif i == 6:
                     x = "{:.2f}".format(x*100)
-                    st.write("Leigh syndrome : ", float(x), "%")
+                    st.write("6. Leigh syndrome : ", float(x), "%")
                 elif i == 7:
                     x = "{:.2f}".format(x*100)
-                    st.write("Mitochondrial myopathy : ", float(x), "%")
+                    st.write("7. Mitochondrial myopathy : ", float(x), "%")
                 else:
                     x = "{:.2f}".format(x*100)
-                    st.write("Tay-Sachs : ", float(x), "%")
+                    st.write("8. Tay-Sachs : ", float(x), "%")
             i+=1
 
     if "full_predict" not in st.session_state:
