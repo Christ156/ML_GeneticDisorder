@@ -27,11 +27,19 @@ def homePage():
     st.subheader("Kapan harus ke dokter?", divider=True)
     st.text("Lakukan skrining genetik ke dokter sebelum merencanakan kehamilan. Tujuannya adalah untuk mengetahui seberapa besar kelainan genetik menurun kepada anak. Skrining genetik juga bisa dilakukan pada bayi yang baru lahir untuk mendeteksi adanya kelainan genetik. Segera bawa anak ke dokter jika ia pertumbuhan dan perkembangannya terlambat walaupun telah mendapat nutrisi yang cukup, atau mengalami cacat pada anggota tubuh tertentu.")
 
-def simplePredict():
-    st.title("Simple prediction")
+def advancedPredict():
+    st.title("Let's predict your disorder")
 
     # Biodata diri
     name = st.text_input('Nama')
+    gender = st.pills("Gender", ["Men", "Women", "Ambiguous"], selection_mode="single", key="Gender")
+    if gender == "Men":
+        gender = 2
+    elif gender == "Women":
+        gender = 1
+    elif gender == "Ambiguous":
+        gender = 0
+
     age = st.slider("Usia anda", 0, 120, 20)
 
     st.divider()
@@ -39,214 +47,83 @@ def simplePredict():
     col1, col2 = st.columns(2)
 
     # Skrining
-
     with col1:
-        hOsubstanceAbuse = st.pills("H/O Substance abuse", ["Yes", "No"], selection_mode="single", key="hOsubstanceAbuse")
-        if hOsubstanceAbuse == "Yes":
-            hOsubstanceAbuse = 1
-        else:
-            hOsubstanceAbuse = 0
+        totalBloodCell = 0
 
-        autopsyBirthDefect = st.pills("Autopsy shows birth defect", ["Yes", "No"], selection_mode="single", key="autopsyBirthDefect")
-        if autopsyBirthDefect == "Yes":
-            autopsyBirthDefect = 1
+        redBloodCellCount = st.number_input("Red Blood Cell Count (mcL)")
+        whiteBloodCellCount = st.number_input("White Blood Cell Count (mcL)")
+        totalBloodCell = redBloodCellCount + whiteBloodCellCount
+
+        folicAcid = st.pills("Folic Acid details", ["Yes", "No"], selection_mode="single", key="folicAcid")
+        if folicAcid == "Yes":
+            folicAcid = 1
         else:
-            autopsyBirthDefect = 0
+            folicAcid = 0
+
+        totalSymtomps = 0
 
         symptom1 = st.checkbox("Symptom 1")
         if symptom1 == True:
             symptom1 = 1.0
+            totalSymtomps += 1
         else:
             symptom1 = 0.0
         symptom2 = st.checkbox("Symptom 2")
         if symptom2 == True:
             symptom2 = 1.0
+            totalSymtomps += 1
         else:
             symptom2 = 0.0
         symptom3 = st.checkbox("Symptom 3")
         if symptom3 == True:
             symptom3 = 1.0
+            totalSymtomps += 1
         else:
             symptom3 = 0.0
         symptom4 = st.checkbox("Symptom 4")
         if symptom4 == True:
             symptom4 = 1.0
+            totalSymtomps += 1
         else:
             symptom4 = 0.0
         symptom5 = st.checkbox("Symptom 5")
         if symptom5 == True:
             symptom5 = 1.0
+            totalSymtomps += 1
         else:
             symptom5 = 0.0
+
     with col2:
         genesMom = st.checkbox("Genes in mother's side")
         if genesMom == True:
             genesMom = 1
         else:
             genesMom = 0
+
         inheritDad = st.checkbox("Inherited from father")
         if inheritDad == True:
             inheritDad = 1
         else:
             inheritDad = 0
+
         maternalGen = st.checkbox("Maternal gene")
         if maternalGen == True:
             maternalGen = 1
         else:
             maternalGen = 0
+
         paternalGen = st.checkbox("Paternal gene")
         if paternalGen == True:
             paternalGen = 1
         else:
             paternalGen = 0
-    st.divider()
-
-    @st.dialog("Simple Diagnosis Result")
-    def prediction_simple_modal():
-        simple_model = pickle.load(open('disorder_subclass_simple.sav', 'rb'))
-        simple_prediction = simple_model.predict([[genesMom, inheritDad, maternalGen, paternalGen, autopsyBirthDefect, hOsubstanceAbuse, symptom1, symptom2, symptom3, symptom4, symptom5]])
-        simple_diagnosis = ""
-
-        if simple_prediction[0] == 0:
-            simple_diagnosis = "Alzheimer's"
-        elif simple_prediction[0] == 1:
-            simple_diagnosis = "Cancer"
-        elif simple_prediction[0] == 2:
-            simple_diagnosis = "Cystic fibrosis"
-        elif simple_prediction[0] == 3:
-            simple_diagnosis = "Diabetes"
-        elif simple_prediction[0] == 4:
-            simple_diagnosis = "Hemochromatosis"
-        elif simple_prediction[0] == 5:
-            simple_diagnosis = "Leber's hereditary optic neuropathy"
-        elif simple_prediction[0] == 6:
-            simple_diagnosis = "Leigh syndrome"
-        elif simple_prediction[0] == 7:
-            simple_diagnosis = "Mitochondrial myopathy"
-        else:
-            simple_diagnosis = "Tay-Sachs"
-
-        st.write(name, "dengan usia", age, "mengidap penyakit turunan ", simple_diagnosis)
-
-    if "simple_predict" not in st.session_state:
-        if st.button("Submit", key="simplePredict"):
-            prediction_simple_modal()
-
-def advancedPredict():
-    st.title('Advanced predict')
-
-    # Biodata diri
-    name = st.text_input('Nama')
-    age = st.slider("Usia anda", 0, 120, 20)
-
-    st.divider()
-
-    col1, col2 = st.columns(2)
-
-    # Skrining
-
-    with col1:
-        bloodCellCount = st.number_input("Blood Cell Count (mcL)")
-        followUp = st.pills("Follow-up", ["High", "Low"], selection_mode="single")
-        if followUp == "Low":
-            followUp = 1
-        else:
-            followUp = 0
-
-        hOradiationExposure = st.pills("H/O Radiation exposure (X-Ray)", ["Yes", "No"], selection_mode="single", key="hOradiationExposure")
-        if hOradiationExposure == "Yes":
-            hOradiationExposure = 1
-        else:
-            hOradiationExposure = 0
-
-        hOsubstanceAbuse = st.pills("H/O Substance abuse", ["Yes", "No"], selection_mode="single", key="hOsubstanceAbuse")
-        if hOsubstanceAbuse == "Yes":
-            hOsubstanceAbuse = 1
-        else:
-            hOsubstanceAbuse = 0  
-
-        birthDefect = st.pills("Birth defects", ["Singular", "Multiple"], selection_mode="single", key="birthDefect")
-        if birthDefect == "Singular":
-            birthDefect = 1
-        else:
-            birthDefect = 0 
-
-        birthAsphyxia = st.pills("Birth asphyxia", ["Yes", "No"], selection_mode="single", key="birthAsphyxia")
-        if birthAsphyxia == "Yes":
-            birthAsphyxia = 1
-        else:
-            birthAsphyxia = 0
-
-        whiteBloodCellCount = st.number_input("White blood cell count (thousand per microliter)")
-        bloodTestResult = st.pills("Blood test result", ["Normal", "Abnormal", "Slightly abnormal", "Inconclusive"], selection_mode="single", key="bloodTestResult")
-        if bloodTestResult == "Normal":
-            bloodTestResult = 2
-        elif bloodTestResult == "Abnormal":
-            bloodTestResult = 0
-        elif bloodTestResult == "Slightly abnormal":
-            bloodTestResult = 3            
-        elif bloodTestResult == "Inconclusive":
-            bloodTestResult = 1
-
-        symptom1 = st.checkbox("Symptom 1")
-        if symptom1 == True:
-            symptom1 = 1.0
-        else:
-            symptom1 = 0.0
-        symptom2 = st.checkbox("Symptom 2")
-        if symptom2 == True:
-            symptom2 = 1.0
-        else:
-            symptom2 = 0.0
-        symptom3 = st.checkbox("Symptom 3")
-        if symptom3 == True:
-            symptom3 = 1.0
-        else:
-            symptom3 = 0.0
-        symptom4 = st.checkbox("Symptom 4")
-        if symptom4 == True:
-            symptom4 = 1.0
-        else:
-            symptom4 = 0.0
-        symptom5 = st.checkbox("Symptom 5")
-        if symptom5 == True:
-            symptom5 = 1.0
-        else:
-            symptom5 = 0.0
-
-    with col2:
-        momAge = st.slider("Mother's age", 0, 120, 20)
-        DadAge = st.slider("Father's age", 0, 120, 20)
-        genesMom = st.checkbox("Genes in mother's side")
-        if genesMom == True:
-            genesMom = 1
-        else:
-            genesMom = 0
-
-        inheritDad = st.checkbox("Inherited from father")
-        if inheritDad == True:
-            inheritDad = 1
-        else:
-            inheritDad = 0
-
-        maternalGen = st.checkbox("Maternal gene")
-        if maternalGen == True:
-            maternalGen = 1
-        else:
-            maternalGen = 0
-
-        status = st.pills("Status", ["Alive", "Deceased"], selection_mode="single", key="status")
-        if status == "Alive":
-            status = 0
-        else:
-            status = 1
 
     st.divider()
 
     @st.dialog("Full Diagnosis Result")
     def prediction_full_modal():
-        full_model = pickle.load(open('disorder_subclass_full.sav', 'rb'))
-        full_prediction = full_model.predict([[genesMom, inheritDad, maternalGen, momAge, DadAge, status, followUp, birthAsphyxia, birthDefect, hOradiationExposure, hOsubstanceAbuse, whiteBloodCellCount, bloodTestResult, symptom1, symptom2, symptom3, symptom4, symptom5, bloodCellCount]])
+        full_model = pickle.load(open('disorder_subclass_final.sav', 'rb'))
+        full_prediction = full_model.predict([[genesMom, inheritDad, maternalGen, paternalGen, folicAcid, whiteBloodCellCount, symptom1, symptom2, symptom3, symptom4, symptom5, totalBloodCell, totalSymtomps, gender]])
         full_diagnosis = ""
 
         if full_prediction[0] == 0:
@@ -274,5 +151,5 @@ def advancedPredict():
         if st.button("Submit", key="fullPredict"):
             prediction_full_modal()
 
-pg = st.navigation([st.Page(homePage, title="Home"), st.Page(simplePredict, title="Simple prediction"), st.Page(advancedPredict, title="Advanced prediction")])
+pg = st.navigation([st.Page(homePage, title="Home"), st.Page(advancedPredict, title="Advanced prediction")])
 pg.run()
