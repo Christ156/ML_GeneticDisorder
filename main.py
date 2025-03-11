@@ -123,7 +123,7 @@ def advancedPredict():
 
     st.divider()
 
-    @st.dialog("Hasil Diagnosis")
+    @st.dialog("Confidence score")
     def prediction_full_modal():
         full_model = pickle.load(open('disorder_subclass_final.sav', 'rb'))
         full_proba = full_model.predict_proba([[genesMom, inheritDad, maternalGen, paternalGen, folicAcid, whiteBloodCellCount, symptom1, symptom2, symptom3, symptom4, symptom5, totalBloodCell, totalSymtomps, gender]])
@@ -150,7 +150,7 @@ def advancedPredict():
             full_diagnosis = "Tay-Sachs"
 
         percentDiag = "{:.2f}".format(full_proba[0][full_prediction[0]]*100)
-        st.write(name, "dengan usia", age, "mengidap penyakit turunan", full_diagnosis, " dengan prosentase sebesar ", float(percentDiag), "%")
+        st.write(name, "dengan usia", age, "berpotensi mengidap genetic disorder ", full_diagnosis, " dengan prosentase sebesar ", float(percentDiag), "%")
 
         st.title("Probabilitas terkena genetic disorder lain:")
         st.bar_chart(full_proba[0]*100, x_label="Disorder Class", y_label="Percentage")
